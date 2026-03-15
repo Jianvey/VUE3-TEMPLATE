@@ -1,19 +1,26 @@
 <template>
-  <div id="NotFound">
-    <canvas v-if="isCanvasSupported" id="Snowflake"></canvas>
-    <div v-else id="text-notFound">对不起! 您访问的页面不存在</div>
+  <div class="m-0 h-screen w-full overflow-hidden bg-linear-to-b from-[#acb6e5] to-[#74ebd5] p-0">
+    <canvas
+      v-if="isCanvasSupported"
+      id="NotFound-Canvas"
+      class="h-screen w-screen tracking-[1.25rem]"
+    ></canvas>
+    <div v-else class="flex h-full w-full items-center justify-center text-3xl text-white">
+      对不起! 您访问的页面不存在
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
 import { random } from "radash"
+import { onMounted, ref } from "vue"
+
 import { getStyleVariable } from "@/tools/style"
 
 const isCanvasSupported = ref(true)
 
 onMounted(() => {
-  const canvas = document.querySelector<HTMLCanvasElement>("#NotFound #Snowflake")
+  const canvas = document.querySelector<HTMLCanvasElement>("#NotFound-Canvas")
   if (!canvas || !canvas.getContext) {
     isCanvasSupported.value = false
     return
@@ -42,7 +49,7 @@ onMounted(() => {
   function drawMoon() {
     ctx.save()
     ctx.beginPath()
-    ctx.font = `80rem ${fontFamily}`
+    ctx.font = `5rem ${fontFamily}`
     ctx.strokeStyle = "gray"
     ctx.textAlign = "center"
     ctx.strokeText("404", X / 2 + 10, Y / 3 + 30)
@@ -242,16 +249,16 @@ onMounted(() => {
     drawMoon()
     drawGround()
     for (let i = 0; i < backSnows.length; i++) {
-      backSnows[i].render()
+      backSnows[i]?.render()
     }
     for (let i = 0; i < backTrees.length; i++) {
-      backTrees[i].render()
+      backTrees[i]?.render()
     }
     for (let i = 0; i < trees.length; i++) {
-      trees[i].render()
+      trees[i]?.render()
     }
     for (let i = 0; i < snows.length; i++) {
-      snows[i].render()
+      snows[i]?.render()
     }
     requestAnimationFrame(render)
   }
@@ -263,50 +270,18 @@ onMounted(() => {
     drawMoon()
     drawGround()
     for (let i = 0; i < backSnows.length; i++) {
-      backSnows[i].resize()
+      backSnows[i]?.resize()
     }
     for (let i = 0; i < backTrees.length; i++) {
-      backTrees[i].resize()
+      backTrees[i]?.resize()
     }
     for (let i = 0; i < trees.length; i++) {
-      trees[i].resize()
+      trees[i]?.resize()
     }
     for (let i = 0; i < snows.length; i++) {
-      snows[i].resize()
+      snows[i]?.resize()
     }
   }
   window.addEventListener("resize", onResize)
 })
 </script>
-
-<style lang="scss">
-#NotFound {
-  width: 100%;
-  height: 100vh;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background: #74ebd5;
-  background: linear-gradient(to bottom, #acb6e5, #74ebd5);
-  #Snowflake {
-    width: 100vw;
-    height: 100vh;
-    letter-spacing: 20rem;
-    background: #74ebd5;
-    background: linear-gradient(to bottom, #acb6e5, #74ebd5);
-  }
-  #text-notFound {
-    width: 100%;
-    height: 100%;
-    @include flex-center;
-    color: white;
-    font-size: 30rem;
-  }
-
-  @media screen and (max-width: 435rem) {
-    #text-notFound {
-      font-size: 7vw;
-    }
-  }
-}
-</style>

@@ -1,8 +1,0 @@
-@use "@/assets/styles/scss/base/_mixins" as *;
-@use "@/assets/styles/scss/theme/root" as *;
-@use "@/assets/styles/scss/theme/light" as *;
-@use "@/assets/styles/scss/theme/dark" as *;
-
-@include generate-css-variables($root-vars);
-@include generate-css-variables($light-vars, light);
-@include generate-css-variables($dark-vars, dark);

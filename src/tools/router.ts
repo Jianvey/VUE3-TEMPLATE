@@ -1,7 +1,8 @@
+import NProgress from "nprogress"
 import type { RouteLocationNormalized } from "vue-router"
+
 import { SITE_TITLE } from "@/global/env"
 import routes from "@/router/routes"
-import NProgress from "nprogress"
 
 /**
  * @description 获取所有 keep-alive: true 的路由名称

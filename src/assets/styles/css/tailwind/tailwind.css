@@ -1,0 +1,13 @@
+@import "tailwindcss/theme" layer(tailwind.theme);
+@import "tailwindcss/utilities" layer(tailwind.utilities);
+
+@import "./utilities.css";
+@import "./tokens.css";
+@import "./themes/base.css";
+@import "./themes/lavender.css";
+
+@import "./vuetify.css";
+
+@config "../../../../../tailwind.config.ts";
+
+@custom-variant dark (&:where(.dark, .dark *));

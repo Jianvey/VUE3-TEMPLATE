@@ -1,8 +1,6 @@
-import dark from "@/assets/styles/scss/theme/dark.module.scss"
-
 export default {
   color: [
-    dark["primary-color"],
+    "var(--color-primary-500)",
     "#dd6b66",
     "#f7f494",
     "#72ccff",

@@ -1,6 +1,7 @@
-import pluginVue from "eslint-plugin-vue"
-import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript"
 import skipFormatting from "@vue/eslint-config-prettier/skip-formatting"
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript"
+import simpleImportSort from "eslint-plugin-simple-import-sort"
+import pluginVue from "eslint-plugin-vue"
 
 export default defineConfigWithVueTs([
   { name: "app/files-to-lint", files: ["**/*.{ts,mts,tsx,vue}"] },
@@ -9,7 +10,12 @@ export default defineConfigWithVueTs([
   vueTsConfigs.recommended,
   skipFormatting,
   {
+    plugins: {
+      "simple-import-sort": simpleImportSort,
+    },
     rules: {
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
       "no-var": "error", // 要求使用 let 或 const 而不是 var
       "no-useless-escape": "off", // 禁止不必要的转义字符
       "vue/multi-word-component-names": "off", // 要求组件名称始终为 “-” 链接的单词

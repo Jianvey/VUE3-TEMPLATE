@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router"
+
 import { BASE_URL } from "@/global/env"
 import routes from "@/router/routes"
 import useStore from "@/store"
-import { setTitle, setProgress } from "@/tools/router"
 import { hasPermission } from "@/tools/permission"
+import { setProgress, setTitle } from "@/tools/router"
 
 const router = createRouter({
   history: createWebHistory(BASE_URL),
@@ -15,14 +16,14 @@ const router = createRouter({
   },
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(to => {
+  setProgress()
+
   if (to.meta.auth && (!useStore().user.token || !hasPermission(to.meta.permission ?? to.path))) {
-    next({ name: "Login" })
-  } else {
-    next()
+    return { name: "Login" }
   }
 
-  setProgress()
+  return true
 })
 
 router.afterEach(to => {

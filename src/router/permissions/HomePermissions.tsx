@@ -1,11 +1,13 @@
-import { PermissionLevel, type Permission } from "@/router/types/permission"
-import { Icon } from "vue-iconify"
+import { mdiAccount } from "@mdi/js"
+import { VIcon } from "vuetify/components"
+
+import { type Permission, PermissionLevel } from "@/router/types/permission"
 
 const HomePermissions: Permission[] = [
   {
     path: "/home",
     label: "首页",
-    icon: <Icon href="icon-push" />,
+    icon: <VIcon icon={mdiAccount} />,
     level: PermissionLevel.MENU,
   },
 ]

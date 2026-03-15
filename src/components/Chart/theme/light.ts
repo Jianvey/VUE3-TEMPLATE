@@ -1,8 +1,15 @@
-import light from "@/assets/styles/scss/theme/light.module.scss"
 import type { ThemeOption } from "echarts/types/src/util/types.js"
 
 const lightOptions: ThemeOption = {
-  color: [light["primary-color"], "#516b91", "#59c4e6", "#edafda", "#93b7e3", "#a5e7f0", "#cbb0e3"],
+  color: [
+    "var(--color-primary-500)",
+    "#516b91",
+    "#59c4e6",
+    "#edafda",
+    "#93b7e3",
+    "#a5e7f0",
+    "#cbb0e3",
+  ],
   backgroundColor: "rgba(252,252,252,0)",
   textStyle: {},
   title: { textStyle: { color: "#666666" }, subtextStyle: { color: "#999999" } },

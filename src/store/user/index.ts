@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+
 import type { State } from "./types"
 
 const useUserStore = defineStore("user", {

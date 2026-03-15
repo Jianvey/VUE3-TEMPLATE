@@ -4,7 +4,13 @@ export enum Mode {
   SYSTEM,
 }
 
+export enum ColorTheme {
+  DEFAULT = "default",
+  LAVENDER = "lavender",
+}
+
 export interface State {
   mode: Mode
   dark: boolean
+  colorTheme: ColorTheme
 }

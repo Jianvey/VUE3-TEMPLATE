@@ -1,15 +1,17 @@
 import { fileURLToPath, URL } from "node:url"
+
 import { defineConfig, loadEnv } from "vite"
-import { plugins, css, build } from "./config"
+
+import { build, css, plugins } from "./config"
 
 export default defineConfig(config => {
-  const PROD = config.mode === "production"
+  // const PROD = config.mode === "production"
   const env = loadEnv(config.mode, process.cwd(), "")
 
   return {
     base: env.VITE_APP_BASE_URL,
     resolve: { alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) } },
-    esbuild: { drop: PROD ? ["console", "debugger"] : undefined },
+    oxc: {},
     plugins: plugins(config),
     css: css(config),
     build: build(config),

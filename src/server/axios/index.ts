@@ -1,7 +1,8 @@
 import axios, { type AxiosResponse } from "axios"
-import { type AxiosInstance, type AxiosRequestConfig, AxiosError } from "axios"
-import { ElMessage } from "element-plus"
+import { AxiosError, type AxiosInstance, type AxiosRequestConfig } from "axios"
+
 import useStore from "@/store"
+import { snackbar } from "@/tools/snackbar"
 
 class HTTP {
   // axios实例
@@ -41,7 +42,7 @@ class HTTP {
         }
 
         if (code !== 0) {
-          ElMessage.error({ message })
+          snackbar.error(message)
           return Promise.reject(response)
         }
 
@@ -103,7 +104,7 @@ class HTTP {
       } catch (error) {
         if (error instanceof AxiosError) {
           if (error.code !== "ERR_CANCELED") {
-            ElMessage.error({ message: error.message })
+            snackbar.error(error.message)
           }
         }
         reject(error)

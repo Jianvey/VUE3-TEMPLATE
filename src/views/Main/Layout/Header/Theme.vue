@@ -1,49 +1,40 @@
 <template>
-  <div id="Layout-Header-Theme">
-    <el-dropdown @command="handleCommand">
-      <Icon href="icon-bg-colors" />
-
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item
-            v-for="item of menus"
-            :key="item.command"
-            :command="item.command"
-            :icon="item.icon"
-            :disabled="theme.mode === item.command"
-          >
-            {{ item.label }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
+  <div id="Layout-Header-Theme" class="flex items-center">
+    <v-menu open-on-hover open-delay="0">
+      <template v-slot:activator="{ props }">
+        <v-icon v-bind="props" :icon="mdiThemeLightDark" />
       </template>
-    </el-dropdown>
+
+      <v-list>
+        <v-list-item
+          v-for="item in menus"
+          :key="item.command"
+          :value="item.command"
+          :disabled="theme.mode === item.command"
+          @click="handleCommand(item.command)"
+        >
+          <v-list-item-title>
+            {{ item.label }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from "vue-iconify"
-import { Sunny, Moon, Setting } from "@element-plus/icons-vue"
+import { mdiThemeLightDark } from "@mdi/js"
+
 import useStore from "@/store"
 import { Mode } from "@/store/theme/types"
 
 const { theme } = useStore()
 const menus = [
-  {
-    label: "亮色模式",
-    command: Mode.LIGHT,
-    icon: Sunny,
-  },
-  {
-    label: "暗黑模式",
-    command: Mode.DARK,
-    icon: Moon,
-  },
-  {
-    label: "跟随系统",
-    command: Mode.SYSTEM,
-    icon: Setting,
-  },
+  { label: "亮色模式", command: Mode.LIGHT },
+  { label: "暗黑模式", command: Mode.DARK },
+  { label: "跟随系统", command: Mode.SYSTEM },
 ]
+
 theme.init()
 const handleCommand = (mode: Mode) => theme.setMode(mode)
 </script>

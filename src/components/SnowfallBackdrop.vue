@@ -1,20 +1,22 @@
 <template>
-  <div id="SnowfallBackdrop">
-    <canvas id="Snowfall"></canvas>
-    <div class="Snowfall-container">
+  <div
+    class="relative m-0 h-full w-full overflow-hidden bg-linear-to-b from-[#a6c1eeb3] to-[#74ebd533] p-0"
+  >
+    <canvas id="SnowfallBackdrop"></canvas>
+    <div class="absolute inset-0 flex items-center justify-center">
       <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
 import { random } from "radash"
+import { onMounted, ref } from "vue"
 
 const isCanvasSupported = ref(true)
 
 onMounted(() => {
-  const canvas = document.querySelector<HTMLCanvasElement>("#SnowfallBackdrop #Snowfall")
+  const canvas = document.querySelector<HTMLCanvasElement>("#SnowfallBackdrop")
   if (!canvas || !canvas.getContext) {
     isCanvasSupported.value = false
     return
@@ -129,10 +131,10 @@ onMounted(() => {
     ctx.clearRect(0, 0, X, Y)
     drawGround()
     for (let i = 0; i < backSnows.length; i++) {
-      backSnows[i].render()
+      backSnows[i]?.render()
     }
     for (let i = 0; i < snows.length; i++) {
-      snows[i].render()
+      snows[i]?.render()
     }
     requestAnimationFrame(render)
   }
@@ -143,39 +145,12 @@ onMounted(() => {
     Y = canvas!.height = window.innerHeight
     drawGround()
     for (let i = 0; i < backSnows.length; i++) {
-      backSnows[i].resize()
+      backSnows[i]?.resize()
     }
     for (let i = 0; i < snows.length; i++) {
-      snows[i].resize()
+      snows[i]?.resize()
     }
   }
   window.addEventListener("resize", onResize)
 })
 </script>
-<style lang="scss">
-#SnowfallBackdrop {
-  $color-background: rgba(
-    $color: #74ebd5,
-    $alpha: 0.2,
-  );
-
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  background: $color-background;
-  background: linear-gradient(to bottom, rgba(#a6c1ee, 0.7), $color-background);
-  position: relative;
-  #Snowfall-canvas {
-    letter-spacing: 20rem;
-    position: absolute;
-    inset: 0;
-  }
-  .Snowfall-container {
-    position: absolute;
-    inset: 0;
-    @include flex-center;
-  }
-}
-</style>

@@ -1,40 +1,22 @@
 <template>
-  <div id="Layout">
-    <Menu />
-    <div class="Layout-main">
+  <div id="Layout" class="flex h-screen w-screen">
+    <div class="h-full w-full">
       <Header />
-      <el-scrollbar height="100%" class="Layout-content" view-class="view-container">
-        <View />
-      </el-scrollbar>
+
+      <div class="h-[calc(100%-var(--layout-header-height))] w-full">
+        <AppRouterView />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppRouterView from "@/components/AppRouterView/AppRouterView.vue"
 import Header from "@/views/Main/Layout/Header/Header.vue"
-import Menu from "@/views/Main/Layout/Menu/Menu.vue"
-import View from "@/components/View/View.vue"
 </script>
 
 <style lang="scss">
 #Layout {
-  #{$prefix}-header-height: 50rem;
-  #{$prefix}-menu-width: 200rem;
-
-  display: flex;
-  height: 100vh;
-  .Layout-main {
-    width: calc(100% - var(#{$prefix}-menu-width));
-    height: 100%;
-
-    .Layout-content {
-      height: calc(100% - var(#{$prefix}-header-height));
-      padding: $space;
-
-      .view-container {
-        height: 100%;
-      }
-    }
-  }
+  --layout-header-height: 3.5rem;
 }
 </style>

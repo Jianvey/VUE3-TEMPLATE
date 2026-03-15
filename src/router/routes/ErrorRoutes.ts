@@ -5,9 +5,7 @@ const ErrorRoutes: Readonly<RouteRecordRaw[]> = [
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: () => import("@/views/Error/NotFound.vue"),
-    meta: {
-      title: "404",
-    },
+    meta: { title: "404" },
   },
 ]
 

@@ -12,15 +12,16 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from "vue"
-import useStore from "@/store"
-import VChart from "vue-echarts"
-import echarts from "@/components/Chart/echarts"
-import { getStyleVariable } from "@/tools/style"
-import root from "@/assets/styles/scss/theme/root.module.scss"
-import type { EChartsInitOpts } from "echarts"
-import type { ChartProps } from "@/components/Chart/types"
 import "@/components/Chart/theme"
+
+import type { EChartsInitOpts } from "echarts"
+import { useTemplateRef } from "vue"
+import VChart from "vue-echarts"
+
+import echarts from "@/components/Chart/echarts"
+import type { ChartProps } from "@/components/Chart/types"
+import useStore from "@/store"
+import { toPX } from "@/tools/fit"
 
 defineProps<ChartProps>()
 const { theme } = useStore()
@@ -29,13 +30,13 @@ const instance = useTemplateRef("ChartRef")
 const initOptions: EChartsInitOpts = { renderer: "svg", locale: "ZH" }
 const loadingOptions = {
   text: "",
-  spinnerRadius: parseFloat(getStyleVariable("spinner-size")) / 2,
-  lineWidth: 2,
-  color: `var(${root["prefix"]}-primary-color)`,
-  maskColor: `var(${root["prefix"]}-mask-color)`,
+  spinnerRadius: toPX(16),
+  lineWidth: toPX(2),
+  color: `var(--color-primary-500)`,
+  maskColor: `var(--color-mask)`,
 }
 
-defineExpose({ chart, instance })
+defineExpose({ chart, instance: instance.value as InstanceType<typeof VChart> })
 </script>
 
 <style lang="scss">

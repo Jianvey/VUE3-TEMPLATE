@@ -1,0 +1,21 @@
+@theme {
+  /* --color-background: ;
+  --color-surface: ;
+  --color-surface-variant: ; */
+  --color-primary: var(--color-primary-500);
+  --color-success: var(--color-green-500);
+  --color-warning: var(--color-orange-500);
+  --color-error: var(--color-red-500);
+  --color-info: var(--color-gray-500);
+}
+
+@source inline("bg-primary");
+@source inline("text-primary");
+@source inline("bg-success");
+@source inline("text-success");
+@source inline("bg-warning");
+@source inline("text-warning");
+@source inline("bg-error");
+@source inline("text-error");
+@source inline("bg-info");
+@source inline("text-info");

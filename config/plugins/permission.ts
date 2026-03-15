@@ -2,8 +2,8 @@
  * @description 生成权限类型文件
  */
 
-import path from "path"
 import fs from "fs"
+import path from "path"
 import type { Plugin } from "vite"
 
 /**

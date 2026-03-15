@@ -1,6 +1,7 @@
 import { registerTheme } from "echarts"
-import light from "./light"
+
 import dark from "./dark"
+import light from "./light"
 
 registerTheme("light", light)
 registerTheme("dark", dark)

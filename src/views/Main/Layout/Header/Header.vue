@@ -1,51 +1,26 @@
 <template>
-  <div id="Layout-Header">
-    <Icon href="icon-logo" class="logo" />
+  <div
+    id="Layout-Header"
+    class="flex h-(--layout-header-height) items-center justify-between border-b border-gray-200 px-3 text-base"
+  >
+    <v-icon size="3rem" class="text-primary">
+      <LogoIcon />
+    </v-icon>
 
-    <div class="action-wrapper">
+    <div class="flex gap-5">
       <Language />
       <Theme />
+      <ThemeColor />
       <User />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Icon } from "vue-iconify"
+import LogoIcon from "@/assets/icons/logo.svg"
+
 import Language from "./Language.vue"
 import Theme from "./Theme.vue"
+import ThemeColor from "./ThemeColor.vue"
 import User from "./User.vue"
 </script>
-
-<style lang="scss">
-#Layout-Header {
-  height: var(#{$prefix}-header-height);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 $space;
-  border-bottom: 1px solid $border-color;
-
-  .logo {
-    font-size: calc(var(#{$prefix}-header-height) - 5rem);
-    color: $primary-color;
-  }
-
-  .action-wrapper {
-    display: flex;
-    gap: $space;
-
-    .#{$ns}-icon,
-    [class^="DX-Icon_"] {
-      font-size: 20rem;
-    }
-
-    .#{$ns}-dropdown {
-      .#{$ns}-tooltip__trigger {
-        display: inline-flex;
-        align-items: center;
-      }
-    }
-  }
-}
-</style>

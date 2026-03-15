@@ -16,9 +16,11 @@
     "headerbtn",
     "ICONFONT",
     "iconify",
+    "iconsets",
     "nightwatch",
     "nprogress",
     "offcanvas",
+    "oklch",
     "Parens",
     "persistedstate",
     "pinia",
@@ -38,6 +40,7 @@
   ],
   "i18n-ally.localesPaths": ["src/locale/languages"],
   "i18n-ally.enabledParsers": ["json"],
+  "i18n-ally.displayLanguage": "zh-CN",
   "i18n-ally.sourceLanguage": "en-US",
   "i18n-ally.extract.keygenStyle": "PascalCase",
   "i18n-ally.keystyle": "nested",
@@ -45,7 +48,8 @@
   "files.associations": {
     ".env": "env",
     "*.env.development": "env",
-    "*.env.production": "env"
+    "*.env.production": "env",
+    "*.css": "tailwindcss"
   },
   "[env]": {
     "editor.defaultFormatter": "IronGeek.vscode-env"

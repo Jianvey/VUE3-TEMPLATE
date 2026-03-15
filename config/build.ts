@@ -1,4 +1,4 @@
-import type { ConfigEnv, BuildOptions } from "vite"
+import type { BuildOptions, ConfigEnv } from "vite"
 
 export default function build(_config: ConfigEnv): BuildOptions {
   return {

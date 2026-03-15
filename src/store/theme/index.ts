@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
-import { Mode, type State } from "./types"
+
+import { ColorTheme, Mode, type State } from "./types"
 
 const useThemeStore = defineStore("theme", {
   persist: true,
@@ -7,11 +8,14 @@ const useThemeStore = defineStore("theme", {
     return {
       mode: Mode.SYSTEM,
       dark: matchMedia("(prefers-color-scheme: dark)").matches,
+      colorTheme: ColorTheme.DEFAULT,
     }
   },
   actions: {
     init() {
       const media = matchMedia("(prefers-color-scheme: dark)")
+
+      this.setColorTheme(this.colorTheme)
 
       if (this.mode === Mode.SYSTEM) this.setMode(Mode.SYSTEM)
       else this.setMode(this.mode)
@@ -29,6 +33,15 @@ const useThemeStore = defineStore("theme", {
     },
     toggleMode() {
       this.setMode(this.dark ? Mode.LIGHT : Mode.DARK)
+    },
+    setColorTheme(colorTheme: ColorTheme) {
+      this.colorTheme = colorTheme
+
+      if (colorTheme === ColorTheme.DEFAULT) {
+        document.documentElement.removeAttribute("data-theme")
+      } else {
+        document.documentElement.setAttribute("data-theme", colorTheme)
+      }
     },
   },
 })

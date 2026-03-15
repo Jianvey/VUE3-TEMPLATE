@@ -1,18 +1,15 @@
 <template>
-  <el-config-provider v-bind="ElementPlusConfig">
-    <View />
-  </el-config-provider>
+  <v-app :theme="theme.dark ? 'dark' : 'light'">
+    <AppRouterView />
+
+    <AppSnackbar />
+  </v-app>
 </template>
 
 <script setup lang="ts">
-import { ElementPlusConfig } from "@/plugins/element-plus"
-import View from "@/components/View/View.vue"
+import AppRouterView from "@/components/AppRouterView/AppRouterView.vue"
 import useStore from "@/store"
 
-const { locale } = useStore()
+const { theme, locale } = useStore()
 locale.setLanguage(locale.language)
 </script>
-
-<style lang="scss">
-@use "@/assets/styles/scss/base/_class.scss" as *;
-</style>

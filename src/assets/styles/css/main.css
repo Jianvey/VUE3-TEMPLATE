@@ -1,0 +1,17 @@
+@import "./tailwind/tailwind";
+
+@import "./vendors/nprogress";
+
+@import "./animations/page-transition";
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--color-gray-950), transparent 50%) transparent;
+  /* 1rem = 16px */
+  font-size: clamp(14px, 0.4167vw + 0.5rem, 16px);
+  @apply scroll-smooth;
+
+  body {
+    @apply bg-white font-sans text-base leading-none text-gray-700 transition-colors duration-300 dark:bg-gray-800 dark:text-gray-200;
+  }
+}

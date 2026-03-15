@@ -1,5 +1,5 @@
-import { ObjectDirective } from "vue"
 import type { AutoAnimateOptions, AutoAnimationPlugin } from "@formkit/auto-animate"
+import { ObjectDirective } from "vue"
 
 declare module "vue" {
   interface ComponentCustomProperties {

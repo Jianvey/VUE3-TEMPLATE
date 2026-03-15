@@ -1,23 +1,18 @@
 <template>
-  <div id="Home" @click="handleClick">{{ $t("Hello") }}</div>
+  <div
+    id="Home"
+    class="flex-center text-primary flex h-full w-full items-center text-6xl select-none"
+    @click="handleClick"
+  >
+    {{ $t("Hello") }}
+  </div>
 </template>
 
 <script setup lang="ts">
 import { t } from "@/tools/locale"
+import { snackbar } from "@/tools/snackbar"
 
 function handleClick() {
-  console.log(t("Hello"))
+  snackbar.success(t("Hello"))
 }
 </script>
-
-<style lang="scss">
-#Home {
-  width: 100%;
-  height: 100%;
-  font-size: 5vw;
-  font-weight: bold;
-  color: $primary-color;
-
-  @include flex-center;
-}
-</style>

@@ -1,30 +1,30 @@
-import * as echarts from "echarts/core"
-import { LabelLayout, UniversalTransition } from "echarts/features"
-import { SVGRenderer } from "echarts/renderers"
-import type { ComposeOption } from "echarts/core"
 import {
   BarChart,
-  LineChart,
-  PieChart,
   type BarSeriesOption,
+  LineChart,
   type LineSeriesOption,
+  PieChart,
   type PieSeriesOption,
 } from "echarts/charts"
 import {
-  TitleComponent,
-  LegendComponent,
-  GridComponent,
-  TooltipComponent,
-  ToolboxComponent,
   DatasetComponent,
-  TransformComponent,
-  type TitleComponentOption,
-  type LegendComponentOption,
-  type GridComponentOption,
-  type TooltipComponentOption,
-  type ToolboxComponentOption,
   type DatasetComponentOption,
+  GridComponent,
+  type GridComponentOption,
+  LegendComponent,
+  type LegendComponentOption,
+  TitleComponent,
+  type TitleComponentOption,
+  ToolboxComponent,
+  type ToolboxComponentOption,
+  TooltipComponent,
+  type TooltipComponentOption,
+  TransformComponent,
 } from "echarts/components"
+import type { ComposeOption } from "echarts/core"
+import * as echarts from "echarts/core"
+import { LabelLayout, UniversalTransition } from "echarts/features"
+import { SVGRenderer } from "echarts/renderers"
 
 export type ECOption = ComposeOption<
   | BarSeriesOption

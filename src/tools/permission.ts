@@ -1,8 +1,7 @@
 import permissions from "@/router/permissions"
-import useStore from "@/store"
-
-import { PermissionLevel } from "@/router/types/permission"
 import type { Permission } from "@/router/types/permission"
+import { PermissionLevel } from "@/router/types/permission"
+import useStore from "@/store"
 
 /**
  * @description 判断当前用户是否拥有查询的权限
@@ -53,6 +52,6 @@ export function getMenuPermissions(permissions: Permission[]): Permission[] {
  * @description 获取当前用户第一个菜单权限
  * @return {Permission} 返回合法菜单
  */
-export function getFirstMenu(): Permission {
+export function getFirstMenu(): Permission | undefined {
   return getMenuPermissions(permissions)?.[0]
 }
