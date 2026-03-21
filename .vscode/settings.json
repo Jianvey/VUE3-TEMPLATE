@@ -6,6 +6,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "cSpell.words": [
     "autoresize",
+    "Axios",
     "boxplot",
     "cascader",
     "commitlint",
