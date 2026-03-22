@@ -5,8 +5,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx"
 import { visualizer } from "rollup-plugin-visualizer"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
-import type { ConfigEnv, PluginOption } from "vite"
-import { loadEnv } from "vite"
+import type { PluginOption } from "vite"
 import viteCompression from "vite-plugin-compression"
 import { createHtmlPlugin } from "vite-plugin-html"
 import progress from "vite-plugin-progress"
@@ -17,9 +16,8 @@ import { injectLinks, injectScripts } from "../inject-tags"
 import permission from "./permission"
 import version from "./version"
 
-export default function plugins({ mode }: ConfigEnv): PluginOption[] {
-  const env = loadEnv(mode, process.cwd(), "")
-  const scripts = injectScripts([env.VITE_APP_ICON_ICONFONT!])
+export default function plugins(): PluginOption[] {
+  const scripts = injectScripts([])
   const links = injectLinks([
     {
       rel: "stylesheet",

@@ -13,10 +13,6 @@ interface ImportMetaEnv {
   readonly VITE_APP_BASE_URL: string
   /** 服务请求地址 */
   readonly VITE_APP_BASE_API: string
-  /** SVG 图标前缀 */
-  readonly VITE_APP_ICON_PREFIX: string
-  /** SVG 图标路径 - 阿里巴巴矢量图标库 */
-  readonly VITE_APP_ICON_ICONFONT: string
 }
 
 interface ImportMeta {
