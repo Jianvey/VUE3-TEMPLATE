@@ -2,9 +2,10 @@
  * @description 生成权限类型文件
  */
 
+import type { Plugin } from "vite"
+
 import fs from "fs"
 import path from "path"
-import type { Plugin } from "vite"
 
 /**
  * 递归获取目录下所有以 .tsx 结尾的文件路径

@@ -2,6 +2,7 @@ import "@/assets/styles/css/vendors/vuetify/settings.scss"
 import "vuetify/styles"
 
 import type { App } from "vue"
+
 import { useI18n } from "vue-i18n"
 import { createVuetify } from "vuetify"
 import { aliases, mdi } from "vuetify/iconsets/mdi-svg"

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 
 import type { Language } from "@/locale/types"
+
 import { i18n } from "@/plugins/locale"
 
 import type { State } from "./types"

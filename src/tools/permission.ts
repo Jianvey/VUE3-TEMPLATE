@@ -1,5 +1,6 @@
-import permissions from "@/router/permissions"
 import type { Permission } from "@/router/types/permission"
+
+import permissions from "@/router/permissions"
 import { PermissionLevel } from "@/router/types/permission"
 import useStore from "@/store"
 

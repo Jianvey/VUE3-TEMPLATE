@@ -1,10 +1,11 @@
 import { en, ja, zhHans } from "vuetify/locale"
 
+import type { Locales } from "@/locale/types"
+import type { Messages } from "@/locale/types"
+
 import enUS from "@/locale/languages/en-US.json"
 import jaJP from "@/locale/languages/ja-JP.json"
 import zhCN from "@/locale/languages/zh-CN.json"
-import type { Locales } from "@/locale/types"
-import type { Messages } from "@/locale/types"
 
 const vuetifyMessages = {
   "en-US": en,

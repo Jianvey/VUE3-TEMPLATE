@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from "node:url"
-
 import { defineConfig, loadEnv } from "vite"
 
 import { build, css, plugins } from "./config"

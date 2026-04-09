@@ -1,5 +1,6 @@
-import useStore from "@/store"
 import type { SnackbarOptions } from "@/store/snackbar/types"
+
+import useStore from "@/store"
 
 function open(params: SnackbarOptions) {
   const { snackbar } = useStore()

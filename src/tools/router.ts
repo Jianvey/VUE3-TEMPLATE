@@ -1,5 +1,6 @@
-import NProgress from "nprogress"
 import type { RouteLocationNormalized } from "vue-router"
+
+import NProgress from "nprogress"
 
 import { SITE_TITLE } from "@/global/env"
 import routes from "@/router/routes"

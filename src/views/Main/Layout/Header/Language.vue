@@ -25,8 +25,9 @@
 <script setup lang="ts">
 import { mdiTranslate } from "@mdi/js"
 
-import locales from "@/locale"
 import type { Language } from "@/locale/types"
+
+import locales from "@/locale"
 import useStore from "@/store"
 
 const { locale } = useStore()

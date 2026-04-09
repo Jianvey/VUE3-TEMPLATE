@@ -1,3 +1,5 @@
+import type { ComposeOption } from "echarts/core"
+
 import {
   BarChart,
   type BarSeriesOption,
@@ -21,7 +23,6 @@ import {
   type TooltipComponentOption,
   TransformComponent,
 } from "echarts/components"
-import type { ComposeOption } from "echarts/core"
 import * as echarts from "echarts/core"
 import { LabelLayout, UniversalTransition } from "echarts/features"
 import { SVGRenderer } from "echarts/renderers"

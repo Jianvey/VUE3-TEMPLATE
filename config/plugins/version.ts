@@ -1,7 +1,8 @@
+import type { Plugin } from "vite"
+
 import { exec } from "child_process"
 import fs from "fs"
 import path from "path"
-import type { Plugin } from "vite"
 
 export default function (): Plugin {
   return {
