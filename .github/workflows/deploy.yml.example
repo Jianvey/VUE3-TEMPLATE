@@ -4,23 +4,30 @@ on:
   push:
     branches-ignore: [main]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
         with:
-          node-version: ">=20.11.1"
-          cache: "npm"
+          version: latest
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ">=24.14.0"
+          cache: "pnpm"
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
       - name: Build
-        run: npm run build
+        run: pnpm run build
       - name: Deploy to Staging server
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@v5.1.0
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_KEY }}
           ARGS: "-rlgoDzvc -i"
@@ -29,4 +36,4 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           REMOTE_PORT: ${{ secrets.SERVER_PORT }}
           TARGET: ${{ secrets.REMOTE_PATH }}
-          EXCLUDE: "/dist/, /node_modules/"
+          EXCLUDE: "/node_modules/"
