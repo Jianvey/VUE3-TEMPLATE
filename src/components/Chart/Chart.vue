@@ -1,6 +1,6 @@
 <template>
   <v-chart
-    id="Chart"
+    class="h-full w-full"
     ref="ChartRef"
     :theme="theme.dark ? 'dark' : 'light'"
     :option="$props.option"
@@ -15,17 +15,17 @@
 import "@/components/Chart/theme"
 
 import type { EChartsInitOpts } from "echarts"
+
 import { useTemplateRef } from "vue"
 import VChart from "vue-echarts"
 
-import echarts from "@/components/Chart/echarts"
 import type { ChartProps } from "@/components/Chart/types"
+
 import useStore from "@/store"
 import { toPX } from "@/tools/fit"
 
 defineProps<ChartProps>()
 const { theme } = useStore()
-const chart = ref<echarts.ECharts>()
 const instance = useTemplateRef("ChartRef")
 const initOptions: EChartsInitOpts = { renderer: "svg", locale: "ZH" }
 const loadingOptions = {
@@ -36,12 +36,5 @@ const loadingOptions = {
   maskColor: `var(--color-mask)`,
 }
 
-defineExpose({ chart, instance: instance.value as InstanceType<typeof VChart> })
+defineExpose({ getInstance: () => instance.value as InstanceType<typeof VChart> })
 </script>
-
-<style lang="scss">
-#Chart {
-  width: 100%;
-  height: 100%;
-}
-</style>
