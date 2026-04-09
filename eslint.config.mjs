@@ -1,6 +1,6 @@
 import skipFormatting from "@vue/eslint-config-prettier/skip-formatting"
 import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript"
-import simpleImportSort from "eslint-plugin-simple-import-sort"
+import perfectionist from "eslint-plugin-perfectionist"
 import pluginVue from "eslint-plugin-vue"
 
 export default defineConfigWithVueTs([
@@ -11,11 +11,11 @@ export default defineConfigWithVueTs([
   skipFormatting,
   {
     plugins: {
-      "simple-import-sort": simpleImportSort,
+      perfectionist,
     },
     rules: {
-      "simple-import-sort/imports": "warn",
-      "simple-import-sort/exports": "warn",
+      "perfectionist/sort-imports": "warn",
+      "perfectionist/sort-exports": "warn",
       "no-var": "error", // 要求使用 let 或 const 而不是 var
       "no-useless-escape": "off", // 禁止不必要的转义字符
       "vue/multi-word-component-names": "off", // 要求组件名称始终为 “-” 链接的单词
