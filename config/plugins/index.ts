@@ -32,7 +32,10 @@ export default function plugins(_config: ConfigEnv): PluginOption[] {
     vueJsx(),
     progress(),
     legacy(),
-    Components({ dts: "./src/typings/components.d.ts" }),
+    Components({
+      dts: "./src/typings/components.d.ts",
+      globs: ["src/components/**/*.vue", "!src/components/Editor/Toolbar/**/*.vue"],
+    }),
     AutoImport({ imports: ["vue"], dts: "./src/typings/auto-imports.d.ts" }),
     vuetify({ autoImport: true }),
     createHtmlPlugin({

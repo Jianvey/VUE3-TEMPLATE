@@ -13,6 +13,8 @@ interface ImportMetaEnv {
   readonly VITE_APP_BASE_URL: string
   /** 服务请求地址 */
   readonly VITE_APP_BASE_API: string
+  /** Cloudflare Turnstile Site Key */
+  readonly VITE_APP_CLOUDFLARE_TURNSTILE_SITE_KEY: string
 }
 
 interface ImportMeta {
