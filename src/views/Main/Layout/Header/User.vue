@@ -29,6 +29,7 @@ import { mdiAccountOutline } from "@mdi/js"
 import { useRouter } from "vue-router"
 
 import useStore from "@/store"
+import { snackbar } from "@/tools/snackbar"
 
 const router = useRouter()
 const { user } = useStore()
@@ -39,7 +40,7 @@ const menus = [
 
 const handleCommand = (command: string) => {
   if (command === "INFO") {
-    console.log("用户信息")
+    snackbar.info("用户信息功能开发中")
   } else if (command === "LOGOUT") {
     user.reset()
     router.replace({ name: "Login" })

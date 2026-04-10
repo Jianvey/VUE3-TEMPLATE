@@ -6,7 +6,7 @@ import useStore from "@/store"
 
 /**
  * @description 判断当前用户是否拥有查询的权限
- * @param {Permission[]} permission 权限名称
+ * @param {string} permission 权限名称
  * @return {boolean} true:拥有权限 false:没有权限
  */
 export function hasPermission(permission: string): boolean {
@@ -18,7 +18,7 @@ export function hasPermission(permission: string): boolean {
  * @param {Permission[]} permissions 获取的权限数组
  * @return {Permission[]} 返回合法模块列表
  */
-export function getModulePermissions(permissions: Permission[]): Permission[] {
+export function getModulePermissions(permissions: readonly Permission[]): Permission[] {
   return permissions.reduce<Permission[]>((result, permission) => {
     const { level } = permission
     if (!hasPermission(permission.path)) return result
@@ -33,7 +33,7 @@ export function getModulePermissions(permissions: Permission[]): Permission[] {
  * @param {Permission[]} permissions 获取的权限数组
  * @return {Permission[]} 返回合法菜单列表
  */
-export function getMenuPermissions(permissions: Permission[]): Permission[] {
+export function getMenuPermissions(permissions: readonly Permission[]): Permission[] {
   return permissions.reduce<Permission[]>((result, permission) => {
     const { level, children } = permission
     if (!hasPermission(permission.path)) return result

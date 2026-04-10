@@ -35,6 +35,5 @@ const menus = [
   { label: "跟随系统", command: Mode.SYSTEM },
 ]
 
-theme.init()
 const handleCommand = (mode: Mode) => theme.setMode(mode)
 </script>

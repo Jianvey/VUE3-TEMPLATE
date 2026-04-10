@@ -2,6 +2,17 @@ import { defineStore } from "pinia"
 
 import { ColorTheme, Mode, type State } from "./types"
 
+let mediaQuery: MediaQueryList | null = null
+let isInitialized = false
+const handleSystemThemeChange = ({ matches }: MediaQueryListEvent) => {
+  const store = useThemeStore()
+  if (store.mode !== Mode.SYSTEM) return
+
+  store.dark = matches
+  if (matches) document.documentElement.classList.add("dark")
+  else document.documentElement.classList.remove("dark")
+}
+
 const useThemeStore = defineStore("theme", {
   persist: true,
   state: (): State => {
@@ -13,21 +24,22 @@ const useThemeStore = defineStore("theme", {
   },
   actions: {
     init() {
-      const media = matchMedia("(prefers-color-scheme: dark)")
+      mediaQuery ??= matchMedia("(prefers-color-scheme: dark)")
 
       this.setColorTheme(this.colorTheme)
+      this.setMode(this.mode)
 
-      if (this.mode === Mode.SYSTEM) this.setMode(Mode.SYSTEM)
-      else this.setMode(this.mode)
+      if (isInitialized) {
+        return
+      }
 
-      media.addEventListener("change", () => {
-        if (this.mode === Mode.SYSTEM) this.setMode(Mode.SYSTEM)
-      })
+      mediaQuery.addEventListener("change", handleSystemThemeChange)
+      isInitialized = true
     },
     setMode(mode: Mode) {
-      const { matches } = matchMedia("(prefers-color-scheme: dark)")
+      mediaQuery ??= matchMedia("(prefers-color-scheme: dark)")
       this.mode = mode
-      this.dark = mode === Mode.SYSTEM ? matches : mode === Mode.DARK
+      this.dark = mode === Mode.SYSTEM ? mediaQuery.matches : mode === Mode.DARK
       if (this.dark) document.documentElement.classList.add("dark")
       else document.documentElement.classList.remove("dark")
     },

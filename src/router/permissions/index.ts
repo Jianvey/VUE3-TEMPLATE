@@ -1,7 +1,9 @@
-import type { Permission } from "@/router/types/permission"
+import type { Permission, PermissionPathFromTree } from "@/router/types/permission"
 
 import HomePermissions from "@/router/permissions/HomePermissions"
 
-const permissions: Permission[] = [...HomePermissions]
+export const permissions = [...HomePermissions] as const satisfies readonly Permission[]
+
+export type PermissionPath = PermissionPathFromTree<typeof permissions>
 
 export default permissions

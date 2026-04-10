@@ -21,5 +21,14 @@ export interface Permission {
   // 权限等级
   level: PermissionLevel
   // 子列表
-  children?: Permission[]
+  children?: readonly Permission[]
 }
+
+export type PermissionPathFromTree<Tree> = Tree extends readonly (infer Item)[]
+  ? PermissionPathFromTree<Item>
+  : Tree extends {
+        path: infer Path extends string
+        children?: infer Children
+      }
+    ? Path | PermissionPathFromTree<NonNullable<Children>>
+    : never

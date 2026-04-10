@@ -10,6 +10,5 @@
 import AppRouterView from "@/components/AppRouterView/AppRouterView.vue"
 import useStore from "@/store"
 
-const { theme, locale } = useStore()
-locale.setLanguage(locale.language)
+const { theme } = useStore()
 </script>
