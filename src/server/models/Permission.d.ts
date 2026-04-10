@@ -17,7 +17,7 @@ declare namespace Model {
 
       /** 权限弹窗编辑参数 */
       type Action = Partial<
-        Pick<Model.Permission, "permissionId" | "permissionName" | "permissions">
+        Pick<Model.Permission.Data, "permissionId" | "permissionName" | "permissions">
       >
     }
   }

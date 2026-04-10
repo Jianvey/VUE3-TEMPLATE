@@ -1,67 +1,217 @@
-import axios, { type AxiosResponse } from "axios"
-import { AxiosError, type AxiosInstance, type AxiosRequestConfig } from "axios"
+import axios, { AxiosError, type AxiosInstance, type AxiosResponse } from "axios"
 
+import router from "@/router"
 import useStore from "@/store"
 import { snackbar } from "@/tools/snackbar"
+
+import type { HTTPRequestConfig, InternalHTTPRequestConfig } from "./types"
+
+const SUCCESS_CODE = 200
+const AUTH_ERROR_CODES = new Set([401, 403])
+const DEFAULT_ERROR_MESSAGE = "请求失败，请稍后重试"
 
 class HTTP {
   // axios实例
   instance: AxiosInstance
+  // 刷新令牌专用实例，避免响应拦截器递归触发
+  refreshInstance: AxiosInstance
   // 进行中的请求
   actives = new Map<string, AbortController>()
+  // 刷新令牌中的请求
+  refreshTokenPromise: Promise<string> | null = null
 
-  constructor(config: AxiosRequestConfig) {
+  constructor(config: HTTPRequestConfig) {
     this.instance = axios.create(config)
+    this.refreshInstance = axios.create(config)
     this.instance.interceptors.request.use(
       config => {
-        this.cancel(config)
-        const controller = new AbortController()
-        config.signal = controller.signal
-        this.actives.set(this.getRequestKey(config), controller)
+        const requestConfig = config as InternalHTTPRequestConfig
 
-        if (config.headers) {
-          const token = sessionStorage.getItem("token")
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`
-          }
+        if (requestConfig.dedupe) {
+          const requestKey = this.getRequestKey(requestConfig)
+          requestConfig._requestKey = requestKey
+          this.cancel(requestKey)
+
+          const controller = new AbortController()
+          requestConfig.signal = controller.signal
+          this.actives.set(requestKey, controller)
         }
 
-        return config
+        const token = useStore().user.token
+        if (!requestConfig.skipAuth && token) {
+          requestConfig.headers.set("Authorization", `Bearer ${token}`)
+        }
+
+        return requestConfig
       },
       error => Promise.reject(error),
     )
     // 响应拦截器
     this.instance.interceptors.response.use(
-      (response: AxiosResponse<Model.Base.Response>) => {
+      async (response: AxiosResponse<Model.Base.Response>) => {
+        this.clear(response.config as InternalHTTPRequestConfig)
+
         const { code, message } = response.data
+        const requestConfig = response.config as InternalHTTPRequestConfig
 
         // 登录过期/Token异常
-        if (code === 401 || code === 403) {
-          this.cancelAll()
-          useStore().user.reset()
+        if (AUTH_ERROR_CODES.has(code)) {
+          return this.retryWithRefresh(response, this.normalizeMessage(message))
         }
 
-        if (code !== 0) {
-          snackbar.error(message)
-          return Promise.reject(response)
+        if (code !== SUCCESS_CODE) {
+          const errorMessage = this.normalizeMessage(message)
+          if (!requestConfig.skipErrorHandler) snackbar.error(errorMessage)
+
+          return Promise.reject(
+            new AxiosError(errorMessage, undefined, requestConfig, response.request, response),
+          )
         }
 
         return response
       },
-      error => {
+      async error => {
+        const requestConfig = error.config as InternalHTTPRequestConfig | undefined
+        if (requestConfig) {
+          this.clear(requestConfig)
+        }
+
+        if (error instanceof AxiosError && error.code === "ERR_CANCELED") {
+          return Promise.reject(error)
+        }
+
+        const response = error?.response as AxiosResponse<Model.Base.Response> | undefined
+        if (response && AUTH_ERROR_CODES.has(response.status)) {
+          return this.retryWithRefresh(response)
+        }
+
         const statusText = error?.response?.statusText
-        error.message = statusText ? `${error?.response.status} (${statusText})` : error.message
+        const errorMessage = statusText
+          ? `${error?.response.status} (${statusText})`
+          : error.message || DEFAULT_ERROR_MESSAGE
+        error.message = errorMessage
+
+        if (!requestConfig?.skipErrorHandler) {
+          snackbar.error(errorMessage)
+        }
 
         return Promise.reject(error)
       },
     )
   }
 
+  private normalizeMessage(message?: string | string[]) {
+    if (Array.isArray(message)) {
+      return message.filter(Boolean).join(", ") || DEFAULT_ERROR_MESSAGE
+    }
+
+    return message || DEFAULT_ERROR_MESSAGE
+  }
+
+  private clear(config?: InternalHTTPRequestConfig) {
+    const requestKey = config?._requestKey
+    if (!requestKey) {
+      return
+    }
+
+    this.actives.delete(requestKey)
+  }
+
+  private isRefreshRequest(config?: InternalHTTPRequestConfig) {
+    return config?.url?.includes("/auth/refresh") ?? false
+  }
+
+  private async refreshAccessToken() {
+    if (!this.refreshTokenPromise) {
+      this.refreshTokenPromise = this.refreshInstance
+        .post<
+          Model.Base.Response<string>,
+          AxiosResponse<Model.Base.Response<string>>,
+          Record<string, never>
+        >("/auth/refresh", {}, { withCredentials: true })
+        .then(response => {
+          const { code, data, message } = response.data
+          if (code !== SUCCESS_CODE) throw new Error(this.normalizeMessage(message))
+
+          useStore().user.setToken(data)
+          return data
+        })
+        .finally(() => {
+          this.refreshTokenPromise = null
+        })
+    }
+
+    return this.refreshTokenPromise
+  }
+
+  private resetAuthState(message?: string) {
+    this.cancelAll()
+    useStore().user.reset()
+
+    if (message) {
+      snackbar.error(message)
+    }
+
+    if (router.currentRoute.value.name !== "Login") {
+      router.replace({ name: "Login" }).catch(() => undefined)
+    }
+  }
+
+  private async retryWithRefresh(
+    response: AxiosResponse<Model.Base.Response>,
+    fallbackMessage?: string,
+  ) {
+    const requestConfig = response.config as InternalHTTPRequestConfig
+
+    if (
+      requestConfig.retryOnAuthError === false ||
+      requestConfig._retried ||
+      this.isRefreshRequest(requestConfig)
+    ) {
+      this.resetAuthState(fallbackMessage ?? this.normalizeMessage(response.data?.message))
+      return Promise.reject(
+        new AxiosError(
+          fallbackMessage ?? this.normalizeMessage(response.data?.message),
+          undefined,
+          requestConfig,
+          response.request,
+          response,
+        ),
+      )
+    }
+
+    try {
+      const token = await this.refreshAccessToken()
+      requestConfig._retried = true
+      requestConfig.headers.set("Authorization", `Bearer ${token}`)
+
+      return this.instance.request(requestConfig)
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : (fallbackMessage ?? this.normalizeMessage(response.data?.message))
+      this.resetAuthState(errorMessage)
+      return Promise.reject(error)
+    }
+  }
+
   /**
    * @description 获取请求唯一Key
    * @return {string}
    */
-  getRequestKey({ baseURL, url, method, data, params }: AxiosRequestConfig): string {
+  getRequestKey({
+    baseURL,
+    url,
+    method,
+    data,
+    params,
+    dedupeKey,
+  }: InternalHTTPRequestConfig): string {
+    if (dedupeKey) {
+      return dedupeKey
+    }
+
     const methodString = method ? method.toUpperCase() : ""
     const dataString = data ? JSON.stringify(data) : ""
     const paramsString = params ? JSON.stringify(params) : ""
@@ -73,7 +223,7 @@ class HTTP {
    * @description 取消进行中的请求
    * @param {string | AxiosRequestConfig} config 请求的唯一Key或配置对象
    */
-  cancel(config: string | AxiosRequestConfig) {
+  cancel(config: string | InternalHTTPRequestConfig) {
     const key = typeof config === "string" ? config : this.getRequestKey(config)
 
     if (this.actives.has(key)) {
@@ -92,43 +242,55 @@ class HTTP {
     this.actives.clear()
   }
 
-  request<T, D>(config: AxiosRequestConfig): Promise<Model.Base.Response<T>> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await this.instance.request<
-          Model.Base.Response<T>,
-          AxiosResponse<Model.Base.Response<T>>,
-          D
-        >(config)
-        resolve(response.data)
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          if (error.code !== "ERR_CANCELED") {
-            snackbar.error(error.message)
-          }
-        }
-        reject(error)
-      }
-    })
+  async request<T = unknown, D = unknown>(
+    config: HTTPRequestConfig<D>,
+  ): Promise<Model.Base.Response<T>> {
+    const response = await this.instance.request<
+      Model.Base.Response<T>,
+      AxiosResponse<Model.Base.Response<T>>,
+      D
+    >(config)
+
+    return response.data
   }
 
-  get<T = any, D = any>(url: string, params: D, config: AxiosRequestConfig = {}) {
+  get<T = unknown, D = Record<string, never>>(
+    url: string,
+    params?: D,
+    config: HTTPRequestConfig<D> = {},
+  ) {
     return this.request<T, D>({ url, params, ...config, method: "GET" })
   }
 
-  post<T = any, D = any>(url: string, data: D, config: AxiosRequestConfig = {}) {
+  post<T = unknown, D = Record<string, never>>(
+    url: string,
+    data?: D,
+    config: HTTPRequestConfig<D> = {},
+  ) {
     return this.request<T, D>({ url, data, ...config, method: "POST" })
   }
 
-  delete<T = any, D = any>(url: string, params: D, config: AxiosRequestConfig = {}) {
+  delete<T = unknown, D = Record<string, never>>(
+    url: string,
+    params?: D,
+    config: HTTPRequestConfig<D> = {},
+  ) {
     return this.request<T, D>({ url, params, ...config, method: "DELETE" })
   }
 
-  patch<T = any, D = any>(url: string, data: D, config: AxiosRequestConfig = {}) {
+  patch<T = unknown, D = Record<string, never>>(
+    url: string,
+    data?: D,
+    config: HTTPRequestConfig<D> = {},
+  ) {
     return this.request<T, D>({ url, data, ...config, method: "PATCH" })
   }
 
-  put<T = any, D = any>(url: string, data: D, config: AxiosRequestConfig = {}) {
+  put<T = unknown, D = Record<string, never>>(
+    url: string,
+    data?: D,
+    config: HTTPRequestConfig<D> = {},
+  ) {
     return this.request<T, D>({ url, data, ...config, method: "PUT" })
   }
 }

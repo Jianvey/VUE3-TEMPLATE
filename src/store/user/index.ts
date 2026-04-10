@@ -3,7 +3,7 @@ import { defineStore } from "pinia"
 import type { State } from "./types"
 
 const useUserStore = defineStore("user", {
-  persist: true,
+  persist: { storage: sessionStorage },
   state: (): State => ({
     info: null,
     token: null,
@@ -16,14 +16,12 @@ const useUserStore = defineStore("user", {
     },
     setToken(token: string) {
       this.token = token
-      sessionStorage.setItem("token", token)
     },
     setPermission(permission: string[]) {
       this.permission = permission
     },
     reset() {
       this.$reset()
-      sessionStorage.removeItem("token")
     },
   },
 })

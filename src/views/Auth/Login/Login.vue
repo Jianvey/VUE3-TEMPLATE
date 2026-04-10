@@ -55,7 +55,7 @@ import { useRouter } from "vue-router"
 
 import LogoIcon from "@/assets/icons/logo.svg"
 import SnowfallBackdrop from "@/components/SnowfallBackdrop.vue"
-// import { signIn } from "@/server/api/auth"
+// import { _SignIn } from "@/server/api/auth"
 import useStore from "@/store"
 import { getFirstMenu } from "@/tools/permission"
 import { snackbar } from "@/tools/snackbar"
@@ -73,7 +73,7 @@ async function login() {
 
   try {
     loading.value = true
-    // const res = await signIn(form)
+    // const res = await _SignIn(form)
 
     //  --- MOCK ---
     const res = {

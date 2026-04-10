@@ -3,7 +3,7 @@ declare namespace Model {
     /** 登录数据 */
     interface Data {
       token: string
-      user: Model.User
+      user: Model.User.Data
       permissions: string[]
     }
 
