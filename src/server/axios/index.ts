@@ -254,43 +254,23 @@ class HTTP {
     return response.data
   }
 
-  get<T = unknown, D = Record<string, never>>(
-    url: string,
-    params?: D,
-    config: HTTPRequestConfig<D> = {},
-  ) {
+  get<T = unknown, D = unknown>(url: string, params?: D, config: HTTPRequestConfig<D> = {}) {
     return this.request<T, D>({ url, params, ...config, method: "GET" })
   }
 
-  post<T = unknown, D = Record<string, never>>(
-    url: string,
-    data?: D,
-    config: HTTPRequestConfig<D> = {},
-  ) {
+  post<T = unknown, D = unknown>(url: string, data?: D, config: HTTPRequestConfig<D> = {}) {
     return this.request<T, D>({ url, data, ...config, method: "POST" })
   }
 
-  delete<T = unknown, D = Record<string, never>>(
-    url: string,
-    params?: D,
-    config: HTTPRequestConfig<D> = {},
-  ) {
+  delete<T = unknown, D = unknown>(url: string, params?: D, config: HTTPRequestConfig<D> = {}) {
     return this.request<T, D>({ url, params, ...config, method: "DELETE" })
   }
 
-  patch<T = unknown, D = Record<string, never>>(
-    url: string,
-    data?: D,
-    config: HTTPRequestConfig<D> = {},
-  ) {
+  patch<T = unknown, D = unknown>(url: string, data?: D, config: HTTPRequestConfig<D> = {}) {
     return this.request<T, D>({ url, data, ...config, method: "PATCH" })
   }
 
-  put<T = unknown, D = Record<string, never>>(
-    url: string,
-    data?: D,
-    config: HTTPRequestConfig<D> = {},
-  ) {
+  put<T = unknown, D = unknown>(url: string, data?: D, config: HTTPRequestConfig<D> = {}) {
     return this.request<T, D>({ url, data, ...config, method: "PUT" })
   }
 }
